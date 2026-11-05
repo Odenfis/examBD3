@@ -1,0 +1,74 @@
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 900px; margin: auto;">
+    
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h2 style="color: #2c3e50; border-bottom: 3px solid #0056b3; display: inline-block; padding-bottom: 10px;">🏢 Evaluación: Auditoría Inteligente Northwind</h2>
+        <p style="color: #555; font-size: 1.1em;">Cada equipo automatizará un reporte aplicando <b>PL/pgSQL, JOINs y Agrupaciones</b>.</p>
+    </div>
+
+    <!-- DICCIONARIO DE DATOS -->
+    <div style="background-color: #e9ecef; border-left: 6px solid #6c757d; padding: 15px 20px; border-radius: 6px; margin-bottom: 30px;">
+        <h3 style="margin-top: 0; color: #495057;">🗄️ Diccionario de Datos (Estructura de la BD)</h3>
+        <p style="font-size: 0.95em; color: #444; margin-bottom: 10px;">Utilicen estos campos para sus consultas y cálculos:</p>
+        <ul style="font-size: 0.9em; font-family: 'Courier New', Courier, monospace; color: #333; line-height: 1.6;">
+            <li><b>categories:</b> <code>category_id</code> (PK), <code>category_name</code></li>
+            <li><b>suppliers:</b> <code>supplier_id</code> (PK), <code>company_name</code></li>
+            <li><b>customers:</b> <code>customer_id</code> (PK), <code>company_name</code></li>
+            <li><b>products:</b> <code>product_id</code> (PK), <code>product_name</code>, <code>unit_price</code>, <code>units_in_stock</code>, <code>category_id</code> (FK), <code>supplier_id</code> (FK)</li>
+            <li><b>orders:</b> <code>order_id</code> (PK), <code>customer_id</code> (FK), <code>ship_country</code>, <code>ship_region</code>, <code>freight</code> (flete)</li>
+        </ul>
+    </div>
+
+    <!-- CASO 1 -->
+    <div style="border: 1px solid #cce5ff; border-radius: 8px; padding: 20px; margin-bottom: 20px; background-color: #f8f9fa; border-left: 6px solid #007bff;">
+        <h3 style="margin-top: 0; color: #007bff;">🔵 GRUPO 1: Departamento de Ventas</h3>
+        <p><b>El Problema:</b> Marketing necesita clasificar a los clientes según su volumen de compras. Solo interesan los clientes con <b>más de 3 pedidos</b>.</p>
+        <ul>
+            <li><b>Lógica:</b> Agrupar por cliente, contar sus pedidos (<code>orders</code>). Si tiene > 15 pedidos: <b>"Cliente VIP"</b>. Si tiene entre 6 y 15: <b>"Cliente Frecuente"</b>. Si tiene 5 o menos: <b>"Cliente Regular"</b>.</li>
+        </ul>
+    </div>
+
+    <!-- CASO 2 -->
+    <div style="border: 1px solid #d4edda; border-radius: 8px; padding: 20px; margin-bottom: 20px; background-color: #f8f9fa; border-left: 6px solid #28a745;">
+        <h3 style="margin-top: 0; color: #28a745;">🟢 GRUPO 2: Departamento de Logística</h3>
+        <p><b>El Problema:</b> Finanzas quiere categorizar los países de destino según el costo total de sus fletes (<code>freight</code>). Solo incluir países cuyo <b>flete total supere 500</b>.</p>
+        <ul>
+            <li><b>Lógica:</b> Agrupar por país de envío (<code>ship_country</code>), sumar el flete. Si el flete total > 3000: <b>"Costo Crítico"</b>. Si está entre 1000 y 3000: <b>"Costo Moderado"</b>. Menor a 1000: <b>"Costo Aceptable"</b>.</li>
+        </ul>
+    </div>
+
+    <!-- CASO 3 -->
+    <div style="border: 1px solid #fff3cd; border-radius: 8px; padding: 20px; margin-bottom: 20px; background-color: #f8f9fa; border-left: 6px solid #ffc107;">
+        <h3 style="margin-top: 0; color: #d39e00;">🟡 GRUPO 3: Estrategia de Precios</h3>
+        <p><b>El Problema:</b> Se necesita evaluar la amplitud de precios en nuestras categorías. Analizar solo categorías con <b>al menos 4 productos</b>.</p>
+        <ul>
+            <li><b>Lógica:</b> Agrupar por categoría. Obtener el Precio Máximo y Mínimo (<code>unit_price</code>). Calcular la diferencia (Max - Min). Si la diferencia > 50: <b>"Catálogo Amplio"</b>. Si está entre 20 y 50: <b>"Catálogo Estándar"</b>. Menor a 20: <b>"Catálogo de Nicho"</b>.</li>
+        </ul>
+    </div>
+
+    <!-- CASO 4 -->
+    <div style="border: 1px solid #f8d7da; border-radius: 8px; padding: 20px; margin-bottom: 20px; background-color: #f8f9fa; border-left: 6px solid #dc3545;">
+        <h3 style="margin-top: 0; color: #dc3545;">🔴 GRUPO 4: Departamento de Compras</h3>
+        <p><b>El Problema:</b> Categorizar a nuestros proveedores según la cantidad total de unidades físicas que nos abastecen actualmente (<code>units_in_stock</code>).</p>
+        <ul>
+            <li><b>Lógica:</b> Agrupar por proveedor (<code>suppliers</code>), sumar el stock de sus productos. Si el stock total > 200: <b>"Proveedor Estratégico"</b>. Entre 50 y 200: <b>"Proveedor Regular"</b>. Menor a 50: <b>"Baja Dependencia"</b>.</li>
+        </ul>
+    </div>
+
+    <!-- CASO 5 -->
+    <div style="border: 1px solid #e2d9f3; border-radius: 8px; padding: 20px; margin-bottom: 20px; background-color: #f8f9fa; border-left: 6px solid #6f42c1;">
+        <h3 style="margin-top: 0; color: #6f42c1;">🟣 GRUPO 5: Auditoría de Catálogo</h3>
+        <p><b>El Problema:</b> Detectar categorías "fantasma" (sin productos) o categorías con poca variedad utilizando un <b>LEFT JOIN</b>.</p>
+        <ul>
+            <li><b>Lógica:</b> Incluir TODAS las categorías. Agrupar por categoría y contar productos. Si cantidad = 0: <b>"ALERTA: Categoría Vacía"</b>. Si tiene entre 1 y 4: <b>"Poca Variedad"</b>. Mayor a 4: <b>"Categoría Saludable"</b>.</li>
+        </ul>
+    </div>
+    
+    <!-- CASO 6 -->
+    <div style="border: 1px solid #d1ecf1; border-radius: 8px; padding: 20px; margin-bottom: 20px; background-color: #f8f9fa; border-left: 6px solid #17a2b8;">
+        <h3 style="margin-top: 0; color: #17a2b8;">🟢 GRUPO 6: Análisis de Regiones</h3>
+        <p><b>El Problema:</b> Clasificar las regiones de envío según la cantidad de pedidos recibidos. Excluir los pedidos donde la región (<code>ship_region</code>) sea NULA.</p>
+        <ul>
+            <li><b>Lógica:</b> Filtrar nulos con <code>WHERE</code>. Agrupar por región y contar pedidos. Solo mostrar regiones con <b>> 5 pedidos</b> (usar <code>HAVING</code>). Si pedidos > 30: <b>"Alta Demanda"</b>. Entre 15 y 30: <b>"Demanda Media"</b>. Menor a 15: <b>"Demanda Baja"</b>.</li>
+        </ul>
+    </div>
+</div>
